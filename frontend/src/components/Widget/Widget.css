@@ -1,0 +1,16 @@
+.widget {
+  flex: 0.2;
+}
+
+.widget__container {
+  margin-left: none;
+  background: rgba(255,255,255,0.8);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.widget__container ul li {
+  list-style: none;
+  padding: 20px;
+}
