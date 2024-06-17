@@ -15,8 +15,8 @@ const Login = () => {
   const loginHandler = async (evt) => {
     evt.preventDefault();
     console.log(formData);
-    setFormData({ email: "", password: "" });
-    await login(formData);
+    const isSuccess = await login(formData);
+    if (isSuccess) setFormData({ email: "", password: "" });
   };
 
   return (
@@ -58,7 +58,8 @@ const Login = () => {
             <input
               type="button"
               className="btn sign-in__btn"
-              value="Sign in"
+              value={loading ? "Signing in..." : "Sign in"}
+              disabled={loading}
               onClick={loginHandler}
             />
           </form>
