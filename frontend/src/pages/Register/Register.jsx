@@ -3,6 +3,7 @@ import "./Register.css";
 import { Link } from "react-router-dom";
 import linkedinLogo from "../../assets/linkedin-logo.svg";
 import GoogleIcon from "../../assets/google-icon.svg";
+import useSignup from "../../hooks/useSignup";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,10 +12,12 @@ const Register = () => {
     password: "",
   });
 
-  const signupHandler = (evt) => {
-    console.log(evt);
+  const { loading, signup } = useSignup();
+
+  const signupHandler = async (evt) => {
     evt.preventDefault();
     console.log(formData);
+    await signup(formData);
   };
   return (
     <div className="register">

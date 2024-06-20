@@ -1,6 +1,8 @@
 const { generateResponse } = require("../utils/generateResponse");
 const User = require("../models/UserModel");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwtToken = require("../utils/jwtToken");
 
 exports.fetchAllUsersController = async (req, res) => {
   try {
@@ -49,23 +51,21 @@ exports.signupController = async (req, res) => {
     // check if existing user
     const foundUser = await User.findOne({ email: email });
     if (foundUser) {
-      return res.status(200).json({
-        success: true,
-        message:
-          "User with that email already exists..Please login or use another email",
-        foundUser,
+      return res.status(400).json({
+        success: false,
+        message: "Email already exists. please login..",
       });
     } else {
       if (!validator.isEmail(email)) {
         return generateResponse(res, 400, false, "Invalid email format");
       }
 
-      if (password.trim().length < 8) {
+      if (password.trim().length < 6) {
         return generateResponse(
           res,
           400,
           false,
-          "Password should be atleast 8 characters long"
+          "Password should be atleast 6 characters long"
         );
       }
 
@@ -82,18 +82,31 @@ exports.signupController = async (req, res) => {
 
       const avatar = `https://ui-avatars.com/api/?name=${avatarName}&background=0D8ABC&color=fff`;
 
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const user = new User({
         name,
         email,
-        password,
+        password: hashedPassword,
         avatar,
       });
 
       user.save();
+
+      jwtToken(user._id, res);
+
+      const userDto = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+      };
+
       return res.status(201).json({
         success: true,
-        message: "Successfully registered a user",
-        user,
+        message: "User registered successfully",
+        user: userDto,
       });
     }
   } catch (error) {
@@ -137,13 +150,23 @@ exports.loginController = async (req, res) => {
     if (!user) {
       return generateResponse(res, 401, false, "Invalid Email or Password");
     } else {
-      if (!(user.password === password)) {
+      const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordMatched) {
         return generateResponse(res, 401, false, "Invalid Email or Password");
       } else {
+        jwtToken(user._id, res);
+        const userDto = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          createdAt: user.createdAt,
+        };
         return res.status(200).json({
           success: true,
           message: "User logged in successfully",
-          user,
+          user: userDto,
         });
       }
     }
