@@ -9,13 +9,19 @@ const useLogin = () => {
     setLoading(true);
     try {
       const response = await axios.post(`${api}/user/login`, loginData);
-      console.log(response.data.user);
+      console.log(response.data);
 
       // success notistack
       enqueueSnackbar(response.data.message, {
         variant: "success",
         autoHideDuration: 3000,
       });
+
+      // saving data to localStorage
+      localStorage.setItem(
+        "activeUser",
+        JSON.stringify({ user: response.data.user, token: response.data.token })
+      );
       return true;
     } catch (error) {
       // error notistack
