@@ -93,7 +93,7 @@ exports.signupController = async (req, res) => {
 
       user.save();
 
-      jwtToken(user._id, res);
+      const token = jwtToken(user._id, res);
 
       const userDto = {
         _id: user._id,
@@ -107,6 +107,7 @@ exports.signupController = async (req, res) => {
         success: true,
         message: "User registered successfully",
         user: userDto,
+        token,
       });
     }
   } catch (error) {
@@ -155,7 +156,7 @@ exports.loginController = async (req, res) => {
       if (!isPasswordMatched) {
         return generateResponse(res, 401, false, "Invalid Email or Password");
       } else {
-        jwtToken(user._id, res);
+        const token = jwtToken(user._id, res);
         const userDto = {
           _id: user._id,
           name: user.name,
@@ -167,6 +168,7 @@ exports.loginController = async (req, res) => {
           success: true,
           message: "User logged in successfully",
           user: userDto,
+          token,
         });
       }
     }
