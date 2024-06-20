@@ -9,7 +9,7 @@ import { UserContext } from "./context/user-context.jsx";
 
 function App() {
   const { user } = useContext(UserContext);
-  console.log(user);
+
   return (
     <>
       <div className="app">

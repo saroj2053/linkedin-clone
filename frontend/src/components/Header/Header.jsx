@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 import "./Header.css";
@@ -10,8 +10,10 @@ import AppsIcon from "@mui/icons-material/Apps";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HeaderOption from "../HeaderOption/HeaderOption.jsx";
+import { UserContext } from "../../context/user-context.jsx";
 
 const Header = () => {
+  const { user } = useContext(UserContext);
   return (
     <div className="header">
       <div className="header__contents">
@@ -34,10 +36,14 @@ const Header = () => {
           <HeaderOption Icon={BusinessCenterIcon} title="Jobs" />
           <HeaderOption Icon={ChatIcon} title="Messaging" />
           <HeaderOption Icon={NotificationsIcon} title="Notifications" />
-          <HeaderOption
-            avatar="https://cdn-icons-png.flaticon.com/512/149/149071.png?w=740&t=st=1680547808~exp=1680548408~hmac=b170bcf0cc4136c35be651998885374c7b45899297002c7d25f7b863eac727ff"
-            title="me"
-          />
+          {user ? (
+            <HeaderOption avatar={user.user.avatar} />
+          ) : (
+            <HeaderOption
+              avatar="https://cdn-icons-png.flaticon.com/512/149/149071.png?w=740&t=st=1680547808~exp=1680548408~hmac=b170bcf0cc4136c35be651998885374c7b45899297002c7d25f7b863eac727ff"
+              title="me"
+            />
+          )}
           <span
             style={{ borderRight: "1px solid lightgray", margin: "0 20px" }}
           ></span>

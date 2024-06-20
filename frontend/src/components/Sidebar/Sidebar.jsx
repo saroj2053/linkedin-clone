@@ -1,9 +1,12 @@
 import { Avatar } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import "./Sidebar.css";
+import { UserContext } from "../../context/user-context";
 
 const Sidebar = () => {
-  const recentItem = topic => {
+  const { user } = useContext(UserContext);
+
+  const recentItem = (topic) => {
     return (
       <div className="sidebar__recentItem">
         <span className="sidebar__hash">#</span>
@@ -20,8 +23,8 @@ const Sidebar = () => {
             alt=""
           />
           <Avatar className="sidebar__avatar" />
-          <h2>Saroj Sah</h2>
-          <h4>saroj.sah@gmail.com</h4>
+          <h2>{user.user.name}</h2>
+          <h4>{user.user.email}</h4>
         </div>
 
         <div className="sidebar__stats">
